@@ -33,7 +33,11 @@ class resolution :
         dPhi = self.deltaPhi(phi1, phi2)
         return sqrt(dEta*dEta+dPhi*dPhi)
 
+    # function that produce the response plot - looking to dR-match between gen-C3d #
+    # keep the highest-pt C3d in the cone as L1-candidate #
     def plotResponse(self) :
+        
+        # definition of the output file and histogram to store in it    
         output = ROOT.TFile("./response_highStat.root","RECREATE")
         h_resoPt = ROOT.TH1D("resoPt","Pt response",100, 0, 2)
         h_resoEta = ROOT.TH1D("resoEta","Eta response",100, -0.15, 0.15);
@@ -93,12 +97,15 @@ class resolution :
                                     pt_cand = c3d_pt_.at(i_c3d)
                                     eta_cand = c3d_eta_.at(i_c3d)
                                     phi_cand = c3d_phi_.at(i_c3d)                                                      
+                    
+                    # fill the response histograms    
                     if hasMatched : 
                         print gen_pt_.at(i_gen), pt_cand
                         h_L1PtvsTrue2D.Fill(gen_pt_.at(i_gen), pt_cand)
                     elif not hasMatched :
                         print gen_pt_.at(i_gen), -1
                         h_L1PtvsTrue2D.Fill(gen_pt_.at(i_gen), -1)
+                    
                     h_resoPt.Fill( pt_cand / gen_pt_.at(i_gen) )
                     h_resoEta.Fill( eta_cand - gen_eta_.at(i_gen) )
                     h_resoPhi.Fill( phi_cand - gen_phi_.at(i_gen) )
