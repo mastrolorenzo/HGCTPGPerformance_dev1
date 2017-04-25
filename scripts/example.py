@@ -3,20 +3,30 @@
 import pandas as pd
 import rootpy.ROOT as ROOT
 
-def main(input_file):
+def main(input_file, analysis_type):
+    print 'Input file: ',input_file
+    print 'Analysis type: ',analysis_type
+    if analysis_type == 'resolution' :
+        print ' --> execution of the resolution analysis'
+        resolution(input_file).plotResponse()
+        
     return
-
 
 if __name__=='__main__':
     import sys
+    from os import path
+    sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+    from hgc_tpg.resolution.resolution import *    
+    
     import optparse
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
     parser.add_option('--input', dest='input_file', help='Input file')
+    parser.add_option('--analysis', dest='analysis_type', help='Type of analysis to be performed: resolution, efficiency, rate, bandwidth')
     (opt, args) = parser.parse_args()
     if not opt.input_file:
         parser.print_help()
         print 'Error: Missing input file name'
         sys.exit(1)
-    main(opt.input_file)
+    main(opt.input_file, opt.analysis_type)
 
