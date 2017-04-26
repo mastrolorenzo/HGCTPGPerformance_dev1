@@ -3,7 +3,6 @@
 # The class provide a function that create an output file and store pt,eta,phi response #
 
 import ROOT
-from ROOT import std
 import utilities.functions as f
 import numpy as np
 

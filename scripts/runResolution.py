@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+from hgc_tpg.resolution.resolution import *
+from utilities.parameters import parameters
 
 def main(input_file, output_file):
     print 'Input file: ',input_file
@@ -23,8 +25,6 @@ def main(input_file, output_file):
 if __name__=='__main__':
     import sys
     import optparse
-    from hgc_tpg.resolution.resolution import *
-    from utilities.parameters import parameters
 
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
