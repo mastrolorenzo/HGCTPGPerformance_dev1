@@ -1,21 +1,31 @@
 #! /usr/bin/env python
 
-import pandas as pd
-import rootpy.ROOT as ROOT
-
 def main(input_file, output_file):
     print 'Input file: ',input_file
     print 'output file: ',output_file
     print ' --> execution of the resolution analysis'
-    resolution(input_file, output_file).plotResponse()
+    
+    # customization of the parameters
+    conf = parameters()
+    conf.minEta_C3d = 1.47
+    conf.maxEta_C3d = 3.0
+    conf.minPt_C3d = 5.0 
+    conf.minEta_gen = 1.47
+    conf.maxEta_gen = 3.0
+    conf.minPt_gen = 5.0
+    conf.particle_type = 22
+    conf.particle_status = 1
+
+    resolution(input_file, output_file, conf).plotResponse()
         
     return
 
 if __name__=='__main__':
     import sys
-    from hgc_tpg.resolution.resolution import *
-
     import optparse
+    from hgc_tpg.resolution.resolution import *
+    from utilities.parameters import parameters
+
     usage = 'usage: %prog [options]'
     parser = optparse.OptionParser(usage)
     parser.add_option('--input', dest='input_file', help='Input file')

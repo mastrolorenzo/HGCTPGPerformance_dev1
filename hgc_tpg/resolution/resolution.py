@@ -1,20 +1,19 @@
-#!/usr/bin/python
 # test of a python analyzer that produce response plots #
 # Luca Mastrolorenzo - 25-04-2017 #
 # The class provide a function that create an output file and store pt,eta,phi response #
 
 import ROOT
 from ROOT import std
-from functions import functions
-import parameters as par
+import utilities.functions as f
 import numpy as np
 
 class resolution :
     
-    def __init__(self, input_file, output_file) :
+    def __init__(self, input_file, output_file, conf) :
         self.inputNtuple = ROOT.TFile.Open(input_file)
         self.outputFile = output_file
         self.chain = self.inputNtuple.Get("hgcalTriggerNtuplizer/HGCalTriggerNtuple")
+        self.cfg = conf
 
     # function that produce the response plot - looking to dR-match between gen-C3d #
     # keep the highest-pt C3d in the cone as L1-candidate #
@@ -45,15 +44,15 @@ class resolution :
             # select the good C3d
             goodC3d_idx = []
             for i_c3d in range(len(c3d_pt_)) :
-                if ( abs( c3d_eta_[i_c3d] ) > par.minEta_C3d and  abs( c3d_eta_[i_c3d] ) < par.maxEta_C3d 
-                     and c3d_pt_[i_c3d] > par.minPt_C3d ) :
+                if ( abs( c3d_eta_[i_c3d] ) > self.cfg.minEta_C3d and  abs( c3d_eta_[i_c3d] ) < self.cfg.maxEta_C3d 
+                     and c3d_pt_[i_c3d] > self.cfg.minPt_C3d ) :
                     goodC3d_idx.append(i_c3d)
                     
             # loop over the gen particle and apply basic selection at MC-truth level
             for i_gen in range(len(gen_pt_)) :
-                if ( abs( gen_eta_[i_gen] ) > par.minEta_gen and abs( gen_eta_[i_gen] ) < par.maxEta_gen 
-                     and gen_pt_[i_gen] > par.minPt_gen and abs( gen_id_[i_gen] ) == 22#par.particle_type 
-                     and gen_status_[i_gen] == par.particle_status ) :
+                if ( abs( gen_eta_[i_gen] ) > self.cfg.minEta_gen and abs( gen_eta_[i_gen] ) < self.cfg.maxEta_gen 
+                     and gen_pt_[i_gen] > self.cfg.minPt_gen and abs( gen_id_[i_gen] ) == self.cfg.particle_type 
+                     and gen_status_[i_gen] == self.cfg.particle_status ) :
                     
                     hasMatched = False
                     pt_cand = -1.
@@ -63,7 +62,7 @@ class resolution :
                     # loop over the good 3D-cluster
                     for i in range(len(goodC3d_idx)) :
                          i_c3d = goodC3d_idx[i]   
-                         dR = functions().deltaR( gen_eta_[i_gen], c3d_eta_[i_c3d], gen_phi_[i_gen], c3d_phi_[i_c3d])                
+                         dR = f.deltaR( gen_eta_[i_gen], c3d_eta_[i_c3d], gen_phi_[i_gen], c3d_phi_[i_c3d])                
                          if dR<0.5 :
                              hasMatched = True
                              if c3d_pt_[i_c3d] > pt_cand :
