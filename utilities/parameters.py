@@ -13,6 +13,6 @@ class parameters :
         self.minEta_gen = float(1.47)
         self.maxEta_gen = float(3.0)
         self.minPt_gen = float(7.0) # in GeV
-        self.particle_type = int(22)
+        self.particle_type = int(11)
         self.particle_status = int(1)
         
